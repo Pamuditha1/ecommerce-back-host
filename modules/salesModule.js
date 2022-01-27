@@ -1,13 +1,13 @@
-const Joi = require('joi');
-const mongoose = require('mongoose');
-const productSchema = require('./productModule')
+const Joi = require("joi");
+const mongoose = require("mongoose");
+const productSchema = require("./products");
 
 // const AddressSchema = mongoose.Schema({
 //     city: String,
 //     street: String,
 //     houseNumber: String,
 // });
-  
+
 //   const ContactInfoSchema = mongoose.Schema({
 //     tel: [Number],
 //     email: [String],
@@ -17,37 +17,45 @@ const productSchema = require('./productModule')
 //     },
 // });
 
-
-const Sale = mongoose.model('Sale', new mongoose.Schema({
+const Sale = mongoose.model(
+  "Sale",
+  new mongoose.Schema({
     orderNo: {
-        type: String
+      type: String,
     },
     status: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     timeStamp: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     // products: {
     //     type: Array,
     //     required: true
     // },
-    products: [{id: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Product"
-    }, size : {type: String} , qty : {type : 'String'} , total : {type : 'String'}
-    }],
+    products: [
+      {
+        id: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product",
+        },
+        size: { type: String },
+        qty: { type: "String" },
+        total: { type: "String" },
+      },
+    ],
     subtotal: {
-        type: String,
-        required: true
+      type: String,
+      required: true,
     },
     customer: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Customer"
-    }
-}));
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Customer",
+    },
+  })
+);
 
 // function validateCustomer(customer) {
 //     const schema = {
