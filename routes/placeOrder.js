@@ -7,7 +7,7 @@ const env = require("../envVariables");
 const nodemailMailGun = require("nodemailer-mailgun-transport");
 const invoiceHTML = require("../invoice/invoiceHTML");
 
-const { Sale } = require("../modules/salesModule");
+const { Sale } = require("../modules/sales");
 const { Product } = require("../modules/products");
 const { Customer } = require("../modules/customerModule");
 

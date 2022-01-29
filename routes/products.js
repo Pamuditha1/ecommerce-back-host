@@ -6,11 +6,17 @@ const {
   updateProduct,
   removeImage,
   getAllProductsAdmin,
+  getSales,
+  getInventory,
 } = require("../controllers/products.js");
 
 router.post("/", addProduct);
 
 router.put("/", updateProduct);
+
+router.get("/sales", getSales);
+
+router.get("/inventory", getInventory);
 
 router.get("/admin", getAllProductsAdmin);
 

@@ -1,27 +1,11 @@
-const Joi = require("joi");
 const mongoose = require("mongoose");
-const productSchema = require("./products");
-
-// const AddressSchema = mongoose.Schema({
-//     city: String,
-//     street: String,
-//     houseNumber: String,
-// });
-
-//   const ContactInfoSchema = mongoose.Schema({
-//     tel: [Number],
-//     email: [String],
-//     address: {
-//         type: AddressSchema,
-//         required: true,
-//     },
-// });
 
 const Sale = mongoose.model(
   "Sale",
   new mongoose.Schema({
     orderNo: {
-      type: String,
+      type: Number,
+      required: true,
     },
     status: {
       type: String,
@@ -31,10 +15,6 @@ const Sale = mongoose.model(
       type: String,
       required: true,
     },
-    // products: {
-    //     type: Array,
-    //     required: true
-    // },
     products: [
       {
         id: {
@@ -42,12 +22,12 @@ const Sale = mongoose.model(
           ref: "Product",
         },
         size: { type: String },
-        qty: { type: "String" },
-        total: { type: "String" },
+        qty: { type: Number },
+        total: { type: Number },
       },
     ],
     subtotal: {
-      type: String,
+      type: Number,
       required: true,
     },
     customer: {

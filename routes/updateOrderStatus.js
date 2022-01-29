@@ -3,7 +3,7 @@ const Joi = require("joi");
 var multer = require("multer");
 const router = express.Router();
 
-const { Sale } = require("../modules/salesModule");
+const { Sale } = require("../modules/sales");
 const { Product } = require("../modules/products");
 
 router.get("/:id", async function (req, res) {
