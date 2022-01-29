@@ -24,9 +24,8 @@ router.get("/", async function (req, res) {
 });
 
 router.get("/:id", async function (req, res) {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findById(req.params.id).populate("supplierID");
 
-  console.log("One Products Admin", product);
   res.status(200).send(product);
 });
 

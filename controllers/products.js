@@ -65,6 +65,62 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.updateProduct = async (req, res) => {
+  let product = await Product.findOne({ productNo: req.body.productNo });
+  if (!product) return res.status(400).send("Product Not Found");
+
+  product.productName = req.body.productName;
+  product.description = req.body.description;
+  product.supplierID = req.body.supplier;
+  product.material = req.body.material;
+  product.color = req.body.color;
+  product.price = +req.body.price;
+  product.bprice = +req.body.bprice;
+  product.rquantity = +req.body.rquantity;
+  product.profit = +req.body.profit;
+  product.profitP = req.body.profitP;
+  product.category = req.body.category;
+
+  //check for size availability
+  let avaiSize = product.combinations.filter((c) => {
+    if (c.size == req.body.size) return true;
+  });
+
+  if (avaiSize.length > 0) {
+    //update current size
+    product.combinations.forEach((p) => {
+      if (p.size == req.body.size)
+        p.qty = parseInt(p.qty) + parseInt(req.body.quantity);
+    });
+    product.totalQuantity =
+      parseInt(product.totalQuantity) + parseInt(req.body.quantity);
+    product.save();
+
+    res
+      .status(200)
+      .send(`Product Size ${req.body.size} Quantity Successfully Updated`);
+    return;
+  }
+
+  //add new size
+  product.combinations.push({ size: req.body.size, qty: +req.body.quantity });
+  product.totalQuantity =
+    parseInt(product.totalQuantity) + parseInt(req.body.quantity);
+
+  await product.save();
+  res.send(`Product Sizes ${req.body.size} Successfully Updated`);
+};
+
+exports.removeImage = async (req, res) => {
+  const product = await Product.findById(req.params.id);
+  if (!product) return res.status(400).send("Invalid Image");
+
+  product.image = "";
+
+  await product.save();
+  res.send(`Image Removed on Product ${product.productNo}`);
+};
+
 exports.getAllProducts = async function (req, res) {
   const products = await Product.find({ $and: [{ totalQuantity }] });
   //   //get available products
@@ -87,4 +143,25 @@ exports.getAllProducts = async function (req, res) {
   //   });
 
   //   res.status(200).send(availableProducts);
+};
+
+exports.getAllProductsAdmin = async function (req, res) {
+  const products = await Product.find({}).populate("category");
+
+  if (products?.length === 0) return res.status(404).send("No Products Found");
+
+  // //filter most popular
+  // let popularF = products.filter((p) => {
+  //   if (p.sales > 0) return true;
+  // });
+  // popularF.sort(compare);
+  // let popular = popularF.slice(0, 2);
+  // let popularIds = popular.map((p) => p._id);
+
+  // //set popular
+  // products.forEach((p) => {
+  //   if (popularIds.includes(p._id)) return (p.popular = true);
+  // });
+
+  res.status(200).send(products);
 };

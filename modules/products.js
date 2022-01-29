@@ -24,6 +24,7 @@ const productSchema = new mongoose.Schema({
   supplierID: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Supplier",
+    required: true,
   },
   image: {
     type: String,
@@ -43,7 +44,8 @@ const productSchema = new mongoose.Schema({
     required: true,
   },
   category: {
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Category",
     required: true,
   },
   sales: {
