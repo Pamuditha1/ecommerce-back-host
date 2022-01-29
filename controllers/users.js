@@ -1,19 +1,9 @@
-const express = require("express");
-const Joi = require("joi");
-const router = express.Router();
+const { User } = require("../modules/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const env = require("../envVariables");
 
-const { User } = require("../modules/usersModule");
-
-router.post("/", async (req, res) => {
-  // console.log(req.body)
-  // res.send('Received')
-
-  // const {error} = validateCustomer(req.body);
-  // if(error) return res.status(400).send(error.details[0].message);
-
+exports.registerUser = async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
   if (user) return res.status(400).send("User Already Registered.");
 
@@ -36,13 +26,7 @@ router.post("/", async (req, res) => {
     { _id: newUser._id, type: newUser.type, name: newUser.username },
     env.jewtKey
   );
-  res
-    .status(200)
-    .header("x-auth-token", token)
-    .header("access-control-expose-headers", "x-auth-token")
-    .send("Successfully Registered the User");
+  res.status(200).send("Successfully Registered the User");
 
   return;
-});
-
-module.exports = router;
+};
