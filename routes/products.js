@@ -8,9 +8,15 @@ const {
   getAllProductsAdmin,
   getSales,
   getInventory,
+  getNewProNo,
+  updateDiscount,
 } = require("../controllers/products.js");
 
+router.get("/pro-no", getNewProNo);
+
 router.post("/", addProduct);
+
+router.put("/discount", updateDiscount);
 
 router.put("/", updateProduct);
 

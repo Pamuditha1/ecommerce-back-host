@@ -1,5 +1,21 @@
 const { Product } = require("../modules/products");
 
+exports.getNewProNo = async function (req, res) {
+  const products = await Product.find()
+    .sort({ _id: -1 })
+    .limit(1)
+    .select("productNo");
+
+  let newNo = 1;
+
+  if (products.length != 0) {
+    let proNo = products[0].productNo.substring(1);
+    newNo = parseInt(proNo) + 1;
+  }
+
+  res.send(newNo.toString());
+};
+
 exports.addProduct = async (req, res) => {
   let availableProduct = await Product.findOne({
     productNo: req.body.productNo,
@@ -65,6 +81,30 @@ exports.addProduct = async (req, res) => {
   }
 };
 
+exports.updateDiscount = async (req, res) => {
+  let product = await Product.findById(req.body.id);
+  if (!product) return res.status(400).send("Invalid Product");
+
+  product.discount = req.body.discount;
+  if (product.discount.includes("%")) {
+    product.discountedPrice =
+      parseInt(product.price) -
+      (parseInt(product.price) * parseInt(req.body.discount.slice(0, -1))) /
+        100;
+  } else {
+    product.discountedPrice =
+      parseInt(product.price) - parseInt(req.body.discount);
+  }
+  await product.save();
+
+  if (req.body.discount == 0) {
+    return res.status(200).send("Discount Removed");
+  }
+  res.send("Discount Updated");
+
+  return;
+};
+
 exports.updateProduct = async (req, res) => {
   let product = await Product.findOne({ productNo: req.body.productNo });
   if (!product) return res.status(400).send("Product Not Found");
@@ -122,7 +162,12 @@ exports.removeImage = async (req, res) => {
 };
 
 exports.getAllProducts = async function (req, res) {
-  const products = await Product.find({ $and: [{ totalQuantity }] });
+  const products = await Product.find({}).populate("category");
+
+  if (products?.length === 0) return res.status(404).send("No Products Found");
+
+  res.status(200).send(products);
+
   //   //get available products
   //   const products = await Product.find({});
   //   let availableProducts = products.filter((p) => {
@@ -149,19 +194,6 @@ exports.getAllProductsAdmin = async function (req, res) {
   const products = await Product.find({}).populate("category");
 
   if (products?.length === 0) return res.status(404).send("No Products Found");
-
-  // //filter most popular
-  // let popularF = products.filter((p) => {
-  //   if (p.sales > 0) return true;
-  // });
-  // popularF.sort(compare);
-  // let popular = popularF.slice(0, 2);
-  // let popularIds = popular.map((p) => p._id);
-
-  // //set popular
-  // products.forEach((p) => {
-  //   if (popularIds.includes(p._id)) return (p.popular = true);
-  // });
 
   res.status(200).send(products);
 };

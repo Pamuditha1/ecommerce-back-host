@@ -19,7 +19,6 @@ const getCustomer = require("./routes/getCustomer");
 const placeOrder = require("./routes/placeOrder");
 const addDiscount = require("./routes/addDiscount");
 const getOrders = require("./routes/getOrders");
-const getLastProNum = require("./routes/getProductNo");
 const loginUser = require("./routes/authUser");
 const getCustomers = require("./routes/getCustomers");
 const deliverOrder = require("./routes/updateOrderStatus");
@@ -52,7 +51,6 @@ app.use("/ninetees/api/user/place-order", placeOrder);
 
 app.use("/ninetees/api/admin/add-discount", addDiscount);
 app.use("/ninetees/api/admin/orders", getOrders);
-app.use("/ninetees/api/admin/proNo", getLastProNum);
 app.use("/ninetees/api/admin/auth", loginUser);
 app.use("/ninetees/api/admin/customers", getCustomers);
 app.use("/ninetees/api/admin/deliver", deliverOrder);

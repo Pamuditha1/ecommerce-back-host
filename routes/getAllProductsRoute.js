@@ -8,7 +8,7 @@ const { Product } = require("../modules/products");
 // let popularIds = []
 
 router.get("/", async function (req, res) {
-  const products = await Product.find({ $and: [{ totalQuantity }] });
+  const products = await Product.find();
   //   //get available products
   //   const products = await Product.find({});
   //   let availableProducts = products.filter((p) => {
