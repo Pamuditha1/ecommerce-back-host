@@ -9,7 +9,7 @@ const invoiceHTML = require("../invoice/invoiceHTML");
 
 const { Sale } = require("../modules/sales");
 const { Product } = require("../modules/products");
-const { Customer } = require("../modules/customerModule");
+const { Customer } = require("../modules/customer");
 
 router.post("/", async (req, res) => {
   // console.log("Place Order", req.body)

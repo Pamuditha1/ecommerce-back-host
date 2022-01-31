@@ -3,7 +3,7 @@ const Joi = require("joi");
 const router = express.Router();
 
 const { Sale } = require("../modules/sales");
-const { Customer } = require("../modules/customerModule");
+const { Customer } = require("../modules/customer");
 
 router.get("/count", async function (req, res) {
   const orders = await Sale.find({ status: "Ordered" });
