@@ -30,3 +30,22 @@ exports.registerUser = async (req, res) => {
 
   return;
 };
+
+exports.loginUser = async (req, res) => {
+  let user = await User.findOne({ email: req.body.email });
+  if (!user) return res.status(400).send("Invalid Email");
+
+  const validPassword = await bcrypt.compare(req.body.password, user.password);
+  if (!validPassword) res.status(400).send("Invalid Password");
+
+  const token = jwt.sign(
+    { _id: user._id, type: user.type, name: user.username },
+    env.jewtKey
+  );
+  res.status(200).json({
+    token,
+    msg: "Logged In Successfully",
+    type: user.type,
+  });
+  return;
+};

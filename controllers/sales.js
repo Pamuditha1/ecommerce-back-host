@@ -1,4 +1,37 @@
 const { Sale } = require("../modules/sales");
+const { Customer } = require("../modules/customer");
+const { Product } = require("../modules/products");
+const { sendInvoiceMail, sendStockLowMail } = require("./utils/emails");
+
+exports.getOrdersCount = async function (req, res) {
+  const orders = await Sale.find({ status: "Ordered" });
+  res.status(200).send(`${orders.length}`);
+};
+
+exports.getOrders = async function (req, res) {
+  const orders = await Sale.find({})
+    .sort({ timeStamp: "desc" })
+    .populate("customer", "-_id -password")
+    .populate({
+      model: "Product",
+      path: "products.id",
+    });
+
+  res.status(200).send(orders);
+};
+
+exports.updateOrder = async function (req, res) {
+  const result = await Sale.updateOne(
+    { orderNo: req.params.id },
+    {
+      $set: {
+        status: "Delivered",
+      },
+    }
+  );
+
+  res.status(200).send(`Order ${req.params.id} Delivered`);
+};
 
 exports.placeOrder = async (req, res) => {
   const lastSale = await Sale.find()
@@ -10,8 +43,6 @@ exports.placeOrder = async (req, res) => {
   if (lastSale.length != 0) {
     let lastNo = lastSale[0].orderNo;
     newNo = parseInt(lastNo) + 1;
-  } else {
-    newNo = 0;
   }
 
   let sale = new Sale({
@@ -19,7 +50,7 @@ exports.placeOrder = async (req, res) => {
     customer: req.body.customer.id,
     status: "Ordered",
     products: req.body.cart,
-    subtotal: req.body.subtotal,
+    subtotal: +req.body.subtotal,
     timeStamp: new Date().toISOString(),
   });
   const saleR = await sale.save();
@@ -45,13 +76,18 @@ exports.placeOrder = async (req, res) => {
     })
     .then((c) => {
       c.save();
-      sendInvoiceMail(
-        customerR.email,
-        saleR,
-        customerR,
-        req.body.cartComplete,
-        req.body.subtotal
-      );
+      // send invoice mail
+      try {
+        sendInvoiceMail(
+          req.body.customer.email,
+          saleR,
+          customerR,
+          req.body.cartComplete,
+          req.body.subtotal
+        );
+      } catch (e) {
+        console.log("Email Error :", e);
+      }
     });
 
   req.body.cart.forEach((p) => {
@@ -61,7 +97,7 @@ exports.placeOrder = async (req, res) => {
         product.totalQuantity =
           parseInt(product.totalQuantity) - parseInt(p.qty);
 
-        //send mails
+        //send stock low mails
         if (parseInt(product.totalQuantity) <= parseInt(product.rquantity)) {
           sendStockLowMail(product.supplierID.email, product);
         }
@@ -100,12 +136,6 @@ exports.placeOrder = async (req, res) => {
       });
   });
 
-  // productR = await product.save();
-
-  res.status(200).send(`Order Successfully Placed.`);
-
-  console.log("Sale Result", saleR);
-  // console.log("Product Result", productR)
-
+  res.status(200).send(`Order Placed Successfully`);
   return;
 };

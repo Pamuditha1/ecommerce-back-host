@@ -37,14 +37,4 @@ const Sale = mongoose.model(
   })
 );
 
-// function validateCustomer(customer) {
-//     const schema = {
-//         name : Joi.string().min(5).required(),
-//         phone : Joi.string().min(5).required(),
-//         isGold: Joi.boolean()
-//     };
-//     return Joi.validate(customer, schema);
-// }
-
 exports.Sale = Sale;
-// exports.validateCustomer = validateCustomer;

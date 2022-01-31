@@ -11,13 +11,10 @@ const categories = require("./routes/categories");
 const suppliers = require("./routes/suppliers");
 const users = require("./routes/users");
 const customers = require("./routes/customers");
+const sales = require("./routes/sales");
 
 const viewAllProducts = require("./routes/getAllProductsRoute");
 const viewAllProductsAdmin = require("./routes/getAllProductsAdmin");
-const placeOrder = require("./routes/placeOrder");
-const getOrders = require("./routes/getOrders");
-const loginUser = require("./routes/authUser");
-const deliverOrder = require("./routes/updateOrderStatus");
 
 const env = require("./envVariables");
 
@@ -38,14 +35,10 @@ app.use("/api/category", categories);
 app.use("/api/supplier", suppliers);
 app.use("/api/user", users);
 app.use("/api/customer", customers);
+app.use("/api/order", sales);
 
 app.use("/ninetees/api/user/products/", viewAllProducts);
 app.use("/ninetees/api/admin/products/", viewAllProductsAdmin);
-app.use("/ninetees/api/user/place-order", placeOrder);
-
-app.use("/ninetees/api/admin/orders", getOrders);
-app.use("/ninetees/api/admin/auth", loginUser);
-app.use("/ninetees/api/admin/deliver", deliverOrder);
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`Listening on port ${port} ...`));
