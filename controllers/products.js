@@ -161,7 +161,13 @@ exports.removeImage = async (req, res) => {
   res.send(`Image Removed on Product ${product.productNo}`);
 };
 
-exports.getAllProducts = async function (req, res) {
+exports.getProduct = async (req, res) => {
+  const product = await Product.findById(req.params.id).populate("supplierID");
+
+  res.status(200).send(product);
+};
+
+exports.getAllProducts = async (req, res) => {
   const products = await Product.find({}).populate("category");
 
   if (products?.length === 0) return res.status(404).send("No Products Found");
@@ -196,6 +202,38 @@ exports.getAllProductsAdmin = async function (req, res) {
   if (products?.length === 0) return res.status(404).send("No Products Found");
 
   res.status(200).send(products);
+};
+
+exports.getDiscountedProducts = async (req, res) => {
+  const discounted = await Product.find({ discount: { $ne: "0" } })
+    .sort({ sales: -1 })
+    .skip(5);
+
+  const popularProducts = await Product.find({ discount: { $ne: "0" } })
+    .sort({ sales: -1 })
+    .limit(5);
+  const popular = popularProducts.map((product) => {
+    return { ...product._doc, popular: true };
+  });
+
+  const discountedProducts = [...discounted, ...popular];
+
+  if (discountedProducts?.length === 0)
+    return res.status(404).send("No Discounted Items Found");
+
+  res.send(discountedProducts);
+};
+
+exports.getMostPopularProducts = async (req, res) => {
+  const products = await Product.find().sort({ sales: -1 }).limit(5);
+
+  if (products?.length === 0)
+    return res.status(404).send("No Popular Items Found");
+
+  const popular = products.map((product) => {
+    return { ...product._doc, popular: true };
+  });
+  res.send(popular);
 };
 
 exports.getSales = async function (req, res) {

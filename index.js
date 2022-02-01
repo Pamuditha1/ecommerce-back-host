@@ -13,9 +13,6 @@ const users = require("./routes/users");
 const customers = require("./routes/customers");
 const sales = require("./routes/sales");
 
-const viewAllProducts = require("./routes/getAllProductsRoute");
-const viewAllProductsAdmin = require("./routes/getAllProductsAdmin");
-
 const env = require("./envVariables");
 
 mongoose
@@ -36,9 +33,6 @@ app.use("/api/supplier", suppliers);
 app.use("/api/user", users);
 app.use("/api/customer", customers);
 app.use("/api/order", sales);
-
-app.use("/ninetees/api/user/products/", viewAllProducts);
-app.use("/ninetees/api/admin/products/", viewAllProductsAdmin);
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`Listening on port ${port} ...`));

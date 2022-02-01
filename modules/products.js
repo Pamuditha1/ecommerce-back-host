@@ -66,10 +66,6 @@ const productSchema = new mongoose.Schema({
   discountedPrice: {
     type: Number,
   },
-  popular: {
-    type: Boolean,
-    default: false,
-  },
   profit: {
     type: Number,
     default: 0,

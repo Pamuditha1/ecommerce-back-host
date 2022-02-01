@@ -10,6 +10,9 @@ const {
   getInventory,
   getNewProNo,
   updateDiscount,
+  getProduct,
+  getDiscountedProducts,
+  getMostPopularProducts,
 } = require("../controllers/products.js");
 
 router.get("/pro-no", getNewProNo);
@@ -25,6 +28,12 @@ router.get("/sales", getSales);
 router.get("/inventory", getInventory);
 
 router.get("/admin", getAllProductsAdmin);
+
+router.get("/discounted", getDiscountedProducts);
+
+router.get("/popular", getMostPopularProducts);
+
+router.get("/:id", getProduct);
 
 router.get("/", getAllProducts);
 
