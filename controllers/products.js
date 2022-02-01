@@ -191,14 +191,6 @@ exports.getAllProducts = async (req, res) => {
   res.status(200).send(allProducts);
 };
 
-exports.getAllProductsAdmin = async function (req, res) {
-  const products = await Product.find({}).populate("category");
-
-  if (products?.length === 0) return res.status(404).send("No Products Found");
-
-  res.status(200).send(products);
-};
-
 exports.getDiscountedProducts = async (req, res) => {
   const discounted = await Product.find({ discount: { $ne: "0" } })
     .populate("category")

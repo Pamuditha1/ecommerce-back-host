@@ -27,8 +27,6 @@ router.get("/sales", getSales);
 
 router.get("/inventory", getInventory);
 
-router.get("/admin", getAllProductsAdmin);
-
 router.get("/discounted", getDiscountedProducts);
 
 router.get("/popular", getMostPopularProducts);
