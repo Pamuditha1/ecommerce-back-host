@@ -120,6 +120,7 @@ exports.updateProduct = async (req, res) => {
   product.profit = +req.body.profit;
   product.profitP = req.body.profitP;
   product.category = req.body.category;
+  product.image = req.body.image;
 
   //check for size availability
   let avaiSize = product.combinations.filter((c) => {
@@ -168,32 +169,26 @@ exports.getProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find({}).populate("category");
+  const products = await Product.find({})
+    .populate("category")
+    .sort({ sales: -1 })
+    .skip(5);
 
-  if (products?.length === 0) return res.status(404).send("No Products Found");
+  const productsPopular = await Product.find()
+    .populate("category")
+    .sort({ sales: -1 })
+    .limit(5);
 
-  res.status(200).send(products);
+  const popular = productsPopular.map((product) => {
+    return { ...product._doc, popular: true };
+  });
 
-  //   //get available products
-  //   const products = await Product.find({});
-  //   let availableProducts = products.filter((p) => {
-  //     if (p.totalQuantity > 0) return true;
-  //   });
+  const allProducts = [...products, ...popular];
 
-  //   //filter most popular
-  //   let popularF = availableProducts.filter((p) => {
-  //     if (p.sales > 0) return true;
-  //   });
-  //   popularF.sort(compare);
-  //   let popular = popularF.slice(0, 2);
-  //   let popularIds = popular.map((p) => p._id);
+  if (allProducts?.length === 0)
+    return res.status(404).send("No Products Found");
 
-  //   //set popular
-  //   availableProducts.forEach((p) => {
-  //     if (popularIds.includes(p._id)) return (p.popular = true);
-  //   });
-
-  //   res.status(200).send(availableProducts);
+  res.status(200).send(allProducts);
 };
 
 exports.getAllProductsAdmin = async function (req, res) {
@@ -206,10 +201,12 @@ exports.getAllProductsAdmin = async function (req, res) {
 
 exports.getDiscountedProducts = async (req, res) => {
   const discounted = await Product.find({ discount: { $ne: "0" } })
+    .populate("category")
     .sort({ sales: -1 })
     .skip(5);
 
   const popularProducts = await Product.find({ discount: { $ne: "0" } })
+    .populate("category")
     .sort({ sales: -1 })
     .limit(5);
   const popular = popularProducts.map((product) => {
@@ -225,7 +222,10 @@ exports.getDiscountedProducts = async (req, res) => {
 };
 
 exports.getMostPopularProducts = async (req, res) => {
-  const products = await Product.find().sort({ sales: -1 }).limit(5);
+  const products = await Product.find()
+    .populate("category")
+    .sort({ sales: -1 })
+    .limit(5);
 
   if (products?.length === 0)
     return res.status(404).send("No Popular Items Found");

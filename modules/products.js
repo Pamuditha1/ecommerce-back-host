@@ -28,6 +28,7 @@ const productSchema = new mongoose.Schema({
   },
   image: {
     type: String,
+    default: "https://en.pimg.jp/052/988/018/1/52988018.jpg",
   },
   material: {
     type: String,
