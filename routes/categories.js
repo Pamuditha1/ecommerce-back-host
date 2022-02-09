@@ -5,10 +5,22 @@ const {
   getCategories,
   updateCategory,
 } = require("../controllers/categories");
+const auth = require("../middleware/auth");
+const role = require("../middleware/role");
 
-router.post("/", addCategory);
+router.post(
+  "/",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  addCategory
+);
 
-router.put("/:id", updateCategory);
+router.put(
+  "/:id",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  updateCategory
+);
 
 router.get("/", getCategories);
 

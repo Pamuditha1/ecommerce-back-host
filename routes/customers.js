@@ -6,13 +6,25 @@ const {
   getAllCustomers,
   getCustomer,
 } = require("../controllers/customers");
+const auth = require("../middleware/auth");
+const role = require("../middleware/role");
 
 router.post("/", registerCustomer);
 
 router.post("/login", login);
 
-router.get("/all", getAllCustomers);
+router.get(
+  "/all",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin", "Employee"]),
+  getAllCustomers
+);
 
-router.get("/:id", getCustomer);
+router.get(
+  "/:id",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin", "Employee"]),
+  getCustomer
+);
 
 module.exports = router;

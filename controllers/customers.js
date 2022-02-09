@@ -1,6 +1,5 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const env = require("../envVariables");
 
 const { Customer } = require("../modules/customer");
 const { Sale } = require("../modules/sales");
@@ -30,7 +29,7 @@ exports.registerCustomer = async (req, res) => {
       type: newCustomer.type,
       name: newCustomer.username,
     },
-    env.jewtKey
+    process.env.JWT
   );
   res.status(200).json({ token, msg: "Successfully Registered the Customer" });
 
@@ -49,7 +48,7 @@ exports.login = async (req, res) => {
 
   const token = jwt.sign(
     { _id: customer._id, type: customer.type, name: customer.username },
-    env.jewtKey
+    process.env.JWT
   );
   res.status(200).json({
     token,

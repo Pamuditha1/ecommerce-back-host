@@ -5,7 +5,6 @@ const {
   getAllProducts,
   updateProduct,
   removeImage,
-  getAllProductsAdmin,
   getSales,
   getInventory,
   getNewProNo,
@@ -14,18 +13,45 @@ const {
   getDiscountedProducts,
   getMostPopularProducts,
 } = require("../controllers/products.js");
+const auth = require("../middleware/auth");
+const role = require("../middleware/role");
 
 router.get("/pro-no", getNewProNo);
 
-router.post("/", addProduct);
+router.post(
+  "/",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  addProduct
+);
 
-router.put("/discount", updateDiscount);
+router.put(
+  "/discount",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin", "Employee"]),
+  updateDiscount
+);
 
-router.put("/", updateProduct);
+router.put(
+  "/",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  updateProduct
+);
 
-router.get("/sales", getSales);
+router.get(
+  "/sales",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  getSales
+);
 
-router.get("/inventory", getInventory);
+router.get(
+  "/inventory",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin", "Employee"]),
+  getInventory
+);
 
 router.get("/discounted", getDiscountedProducts);
 
@@ -35,6 +61,11 @@ router.get("/:id", getProduct);
 
 router.get("/", getAllProducts);
 
-router.delete("/image/:id", removeImage);
+router.delete(
+  "/image/:id",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  removeImage
+);
 
 module.exports = router;

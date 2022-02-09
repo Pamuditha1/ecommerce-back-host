@@ -1,9 +1,15 @@
 const nodemailer = require("nodemailer");
-const env = require("../../envVariables");
 const nodemailMailGun = require("nodemailer-mailgun-transport");
 const invoiceHTML = require("../../invoice/invoiceHTML");
 
-let transporter = nodemailer.createTransport(nodemailMailGun(env.emailAuth));
+const emailAuth = {
+  auth: {
+    api_key: process.env.MAIL_API,
+    domain: process.env.MAIL_DOMAIN,
+  },
+};
+
+let transporter = nodemailer.createTransport(nodemailMailGun(emailAuth));
 
 exports.sendStockLowMail = (email, product) => {
   let mailContent = {

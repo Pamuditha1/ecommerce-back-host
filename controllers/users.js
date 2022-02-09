@@ -1,7 +1,6 @@
 const { User } = require("../modules/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const env = require("../envVariables");
 
 exports.registerUser = async (req, res) => {
   let user = await User.findOne({ email: req.body.email });
@@ -22,10 +21,6 @@ exports.registerUser = async (req, res) => {
 
   await newUser.save();
 
-  const token = jwt.sign(
-    { _id: newUser._id, type: newUser.type, name: newUser.username },
-    env.jewtKey
-  );
   res.status(200).send("Successfully Registered the User");
 
   return;
@@ -36,11 +31,11 @@ exports.loginUser = async (req, res) => {
   if (!user) return res.status(400).send("Invalid Email");
 
   const validPassword = await bcrypt.compare(req.body.password, user.password);
-  if (!validPassword) res.status(400).send("Invalid Password");
+  if (!validPassword) return res.status(400).send("Invalid Password");
 
   const token = jwt.sign(
     { _id: user._id, type: user.type, name: user.username },
-    env.jewtKey
+    process.env.JWT
   );
   res.status(200).json({
     token,
