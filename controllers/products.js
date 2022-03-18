@@ -1,4 +1,6 @@
+const { Category } = require("../modules/category");
 const { Product } = require("../modules/products");
+const ObjectId = require("mongodb").ObjectId;
 
 exports.getNewProNo = async function (req, res) {
   const products = await Product.find()
@@ -176,6 +178,37 @@ exports.getAllProducts = async (req, res) => {
     .skip(5);
 
   const productsPopular = await Product.find({ visible: true })
+    .populate("category")
+    .sort({ sales: -1 })
+    .limit(5);
+
+  const popular = productsPopular.map((product) => {
+    return { ...product._doc, popular: true };
+  });
+
+  const allProducts = [...products, ...popular];
+
+  if (allProducts?.length === 0)
+    return res.status(404).send("No Products Found");
+
+  res.status(200).send(allProducts);
+};
+
+exports.getProductsByCategory = async (req, res) => {
+  const categoryId = req.params.id;
+  const category = await Category.findOne({ name: categoryId });
+
+  if (!category) return res.status(400).send("Invalid Category");
+
+  const products = await Product.find({ visible: true, category: category._id })
+    .populate("category")
+    .sort({ sales: -1 })
+    .skip(5);
+
+  const productsPopular = await Product.find({
+    visible: true,
+    category: category._id,
+  })
     .populate("category")
     .sort({ sales: -1 })
     .limit(5);

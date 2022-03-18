@@ -13,6 +13,7 @@ const {
   getDiscountedProducts,
   getMostPopularProducts,
   hideProduct,
+  getProductsByCategory,
 } = require("../controllers/products.js");
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
@@ -59,6 +60,8 @@ router.get("/discounted", getDiscountedProducts);
 router.get("/popular", getMostPopularProducts);
 
 router.get("/:id", getProduct);
+
+router.get("/category/:id", getProductsByCategory);
 
 router.get("/", getAllProducts);
 
