@@ -164,17 +164,18 @@ exports.removeImage = async (req, res) => {
 
 exports.getProduct = async (req, res) => {
   const product = await Product.findById(req.params.id).populate("supplierID");
+  if (!product) return res.status(400).send("Invalid Product");
 
   res.status(200).send(product);
 };
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find({})
+  const products = await Product.find({ visible: true })
     .populate("category")
     .sort({ sales: -1 })
     .skip(5);
 
-  const productsPopular = await Product.find()
+  const productsPopular = await Product.find({ visible: true })
     .populate("category")
     .sort({ sales: -1 })
     .limit(5);
@@ -192,32 +193,44 @@ exports.getAllProducts = async (req, res) => {
 };
 
 exports.getDiscountedProducts = async (req, res) => {
-  const discounted = await Product.find({ discount: { $ne: "0" } })
+  const discounted = await Product.find({
+    visible: true,
+    discount: { $ne: "0" },
+  })
     .populate("category")
-    .sort({ sales: -1 })
-    .skip(5);
+    .sort({ sales: -1 });
+  // .skip(4);
 
-  const popularProducts = await Product.find({ discount: { $ne: "0" } })
-    .populate("category")
-    .sort({ sales: -1 })
-    .limit(5);
-  const popular = popularProducts.map((product) => {
-    return { ...product._doc, popular: true };
-  });
+  // const popularProducts = await Product.find({
+  //   visible: true,
+  //   discount: { $ne: "0" },
+  // })
+  //   .populate("category")
+  //   .sort({ sales: -1 })
+  //   .limit(4);
 
-  const discountedProducts = [...discounted, ...popular];
+  // const popular = popularProducts
+  //   .map((product) => {
+  //     return { ...product._doc, popular: true };
+  //   })
+  //   .filter((product) => product.discount != "0");
+
+  const discountedProducts = [
+    ...discounted,
+    // , ...popular
+  ];
 
   if (discountedProducts?.length === 0)
     return res.status(404).send("No Discounted Items Found");
 
-  res.send(discountedProducts);
+  res.send(discountedProducts.slice(1, 5));
 };
 
 exports.getMostPopularProducts = async (req, res) => {
-  const products = await Product.find()
+  const products = await Product.find({ visible: true })
     .populate("category")
     .sort({ sales: -1 })
-    .limit(5);
+    .limit(4);
 
   if (products?.length === 0)
     return res.status(404).send("No Popular Items Found");
@@ -258,4 +271,16 @@ exports.getInventory = async (req, res) => {
   ).populate("category");
 
   res.status(200).send(products);
+};
+
+exports.hideProduct = async (req, res) => {
+  const id = req.params.id;
+  const product = await Product.findById(id);
+
+  if (!product) return res.status(404).send("No Item Found");
+
+  product.visible = false;
+  await product.save();
+
+  res.status(200).send("Item Successfully Removed");
 };

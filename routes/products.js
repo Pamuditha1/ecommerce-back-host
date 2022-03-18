@@ -12,6 +12,7 @@ const {
   getProduct,
   getDiscountedProducts,
   getMostPopularProducts,
+  hideProduct,
 } = require("../controllers/products.js");
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
@@ -66,6 +67,13 @@ router.delete(
   auth,
   (req, res, next) => role(req, res, next, ["Admin"]),
   removeImage
+);
+
+router.put(
+  "/:id",
+  auth,
+  (req, res, next) => role(req, res, next, ["Admin"]),
+  hideProduct
 );
 
 module.exports = router;
