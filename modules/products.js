@@ -77,6 +77,10 @@ const productSchema = new mongoose.Schema({
   },
   combinations: [Sizes],
   salesCombinations: [Sizes],
+  visible: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 const Product = mongoose.model("Product", productSchema);
