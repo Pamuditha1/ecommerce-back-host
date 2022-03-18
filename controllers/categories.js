@@ -1,35 +1,50 @@
 const { Category } = require("../modules/category");
 
 exports.addCategory = async (req, res) => {
-  let category = await Category.findOne({ name: req.body.name });
-  if (category) return res.status(400).send("Category Already Available");
+  try {
+    let category = await Category.findOne({ name: req.body.name });
+    if (category) return res.status(400).send("Category Already Available");
 
-  let newCategory = new Category(req.body);
+    let newCategory = new Category(req.body);
 
-  await newCategory.save();
-  res.status(200).send("Category Added Successfully");
+    await newCategory.save();
+    res.status(200).send("Category Added Successfully");
 
-  return;
+    return;
+  } catch (error) {
+    console.error("Error (Add Category) : \n", error);
+    res.status(500).send(error);
+  }
 };
 
 exports.updateCategory = async (req, res) => {
-  let category = await Category.findById(req.params.id);
-  if (!category) return res.status(400).send("Invalid Category");
+  try {
+    let category = await Category.findById(req.params.id);
+    if (!category) return res.status(400).send("Invalid Category");
 
-  category.name = req.body.name;
+    category.name = req.body.name;
 
-  await category.save();
-  res.status(200).send("Category Updated Successfully");
+    await category.save();
+    res.status(200).send("Category Updated Successfully");
 
-  return;
+    return;
+  } catch (error) {
+    console.error("Error (Update Category) : \n", error);
+    res.status(500).send(error);
+  }
 };
 
 exports.getCategories = async (req, res) => {
-  let categories = await Category.find({});
-  if (categories?.length === 0)
-    return res.status(404).send("No Categories Found");
+  try {
+    let categories = await Category.find({});
+    if (categories?.length === 0)
+      return res.status(404).send("No Categories Found");
 
-  res.send(categories);
+    res.send(categories);
 
-  return;
+    return;
+  } catch (error) {
+    console.error("Error (Get Categories) : \n", error);
+    res.status(500).send(error);
+  }
 };
