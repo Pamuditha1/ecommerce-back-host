@@ -23,6 +23,8 @@ exports.getOrders = async function (req, res) {
         path: "products.id",
       });
 
+    if (orders?.length === 0) return res.status(404).send("No Orders Found");
+
     res.status(200).send(orders);
   } catch (error) {
     console.error("Error (Get Orders) : \n", error);
@@ -32,8 +34,11 @@ exports.getOrders = async function (req, res) {
 
 exports.updateOrder = async function (req, res) {
   try {
+    const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
     const result = await Sale.updateOne(
-      { orderNo: req.params.id },
+      { orderNo: id },
       {
         $set: {
           status: "Delivered",

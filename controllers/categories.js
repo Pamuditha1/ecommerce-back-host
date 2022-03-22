@@ -19,8 +19,11 @@ exports.addCategory = async (req, res) => {
 
 exports.updateCategory = async (req, res) => {
   try {
-    let category = await Category.findById(req.params.id);
-    if (!category) return res.status(400).send("Invalid Category");
+    const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
+    let category = await Category.findById(id);
+    if (!category) return res.status(404).send("No Category Found");
 
     category.name = req.body.name;
 

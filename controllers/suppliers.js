@@ -3,7 +3,7 @@ const { Supplier } = require("../modules/supplier");
 exports.addSupplier = async (req, res) => {
   try {
     let supplier = await Supplier.findOne({ email: req.body.email });
-    if (supplier) return res.status(400).send("Supplier Already Registered.");
+    if (supplier) return res.status(400).send("Supplier Already Registered");
 
     let newSupplier = new Supplier({
       name: req.body.name,
@@ -27,6 +27,9 @@ exports.addSupplier = async (req, res) => {
 exports.getSuppliers = async function (req, res) {
   try {
     const suppliers = await Supplier.find({}, { name: 1, _id: 1 });
+
+    if (suppliers?.length === 0)
+      return res.status(404).send("No Suppliers Found");
 
     res.status(200).send(suppliers);
   } catch (error) {

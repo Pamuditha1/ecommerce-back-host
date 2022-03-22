@@ -182,7 +182,10 @@ exports.updateProduct = async (req, res) => {
 
 exports.removeImage = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
+    const product = await Product.findById(id);
     if (!product) return res.status(400).send("Invalid Image");
 
     product.image = "";
@@ -197,9 +200,10 @@ exports.removeImage = async (req, res) => {
 
 exports.getProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate(
-      "supplierID"
-    );
+    const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
+    const product = await Product.findById(id).populate("supplierID");
     if (!product) return res.status(400).send("Invalid Product");
 
     res.status(200).send(product);
@@ -240,6 +244,8 @@ exports.getAllProducts = async (req, res) => {
 exports.getProductsByCategory = async (req, res) => {
   try {
     const categoryId = req.params.id;
+    if (!categoryId) return res.status(400).send("Invalid Category");
+
     const category = await Category.findOne({ name: categoryId });
 
     if (!category) return res.status(400).send("Invalid Category");
@@ -249,27 +255,27 @@ exports.getProductsByCategory = async (req, res) => {
       category: category._id,
     })
       .populate("category")
-      .sort({ sales: -1 })
-      .skip(5);
+      .sort({ sales: -1 });
+    // .skip(5);
 
-    const productsPopular = await Product.find({
-      visible: true,
-      category: category._id,
-    })
-      .populate("category")
-      .sort({ sales: -1 })
-      .limit(5);
+    // const productsPopular = await Product.find({
+    //   visible: true,
+    //   category: category._id,
+    // })
+    //   .populate("category")
+    //   .sort({ sales: -1 })
+    //   .limit(5);
 
-    const popular = productsPopular.map((product) => {
-      return { ...product._doc, popular: true };
-    });
+    // const popular = productsPopular.map((product) => {
+    //   return { ...product._doc, popular: true };
+    // });
 
-    const allProducts = [...products, ...popular];
+    // const allProducts = [...products, ...popular];
 
-    if (allProducts?.length === 0)
+    if (products?.length === 0)
       return res.status(404).send("No Products Found");
 
-    res.status(200).send(allProducts);
+    res.status(200).send(products);
   } catch (error) {
     console.error("Error (Get Products by Category) : \n", error);
     res.status(500).send(error);
@@ -348,6 +354,8 @@ exports.getSales = async function (req, res) {
       }
     ).populate("category");
 
+    if (products?.length === 0) return res.status(404).send("No Sales Found");
+
     res.status(200).send(products);
   } catch (error) {
     console.error("Error (Get Sales) : \n", error);
@@ -370,6 +378,9 @@ exports.getInventory = async (req, res) => {
       }
     ).populate("category");
 
+    if (products?.length === 0)
+      return res.status(404).send("No Products Found");
+
     res.status(200).send(products);
   } catch (error) {
     console.error("Error (Get Inventory) : \n", error);
@@ -380,6 +391,8 @@ exports.getInventory = async (req, res) => {
 exports.hideProduct = async (req, res) => {
   try {
     const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
     const product = await Product.findById(id);
 
     if (!product) return res.status(404).send("No Item Found");

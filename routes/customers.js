@@ -20,11 +20,6 @@ router.get(
   getAllCustomers
 );
 
-router.get(
-  "/:id",
-  auth,
-  (req, res, next) => role(req, res, next, ["Admin", "Employee"]),
-  getCustomer
-);
+router.get("/:id", auth, getCustomer);
 
 module.exports = router;

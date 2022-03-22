@@ -7,7 +7,7 @@ const { Sale } = require("../modules/sales");
 exports.registerCustomer = async (req, res) => {
   try {
     let customer = await Customer.findOne({ email: req.body.email });
-    if (customer) return res.status(400).send("Customer Already Registered.");
+    if (customer) return res.status(400).send("Customer Already Registered");
 
     let newCustomer = new Customer({
       username: req.body.name,
@@ -79,6 +79,9 @@ exports.getAllCustomers = async function (req, res) {
         __v: 0,
       }
     );
+    if (customers?.length === 0)
+      return res.status(404).send("No Customers Found");
+
     customers.forEach((c) => {
       Sale.find({ customer: c._id }).then((s) => {
         c.qutyBought = s.length;
@@ -93,7 +96,10 @@ exports.getAllCustomers = async function (req, res) {
 
 exports.getCustomer = async function (req, res) {
   try {
-    const customer = await Customer.findById(req.params.id).select("-password");
+    const id = req.params.id;
+    if (!id) return res.status(400).send("Invalid Id");
+
+    const customer = await Customer.findById(id).select("-password");
 
     if (!customer) return res.status(400).send("No Customer Found");
 
