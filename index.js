@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const helmet = require("helmet");
 const mongoose = require("mongoose");
 
 var path = require("path");
@@ -27,6 +28,7 @@ mongoose
   });
 
 app.use(cors());
+app.use(helmet());
 app.use(express.json());
 
 app.use("/api/product", products);
