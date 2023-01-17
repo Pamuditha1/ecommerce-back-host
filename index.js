@@ -14,6 +14,7 @@ const suppliers = require("./routes/suppliers");
 const users = require("./routes/users");
 const customers = require("./routes/customers");
 const sales = require("./routes/sales");
+const event = require("./routes/event");
 
 mongoose
   .connect(process.env.MONGODB_URI, {
@@ -37,6 +38,8 @@ app.use("/api/supplier", suppliers);
 app.use("/api/user", users);
 app.use("/api/customer", customers);
 app.use("/api/order", sales);
+
+app.use("/api/event", event);
 
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`Listening on port ${port} ...`));
