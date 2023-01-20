@@ -1,11 +1,26 @@
 const { Wishlist } = require("../modules/wishlist");
 
-exports.addWishProduct = async (req, res) => {
+exports.updateWishlist = async (req, res) => {
   try {
-    let newWish = new Wishlist(req.body);
+    let wish = await Wishlist.findOne({
+      userId: req.body.userId,
+      productId: req.body.productId,
+    });
 
-    const saved = await newWish.save();
-    res.status(200).send("Wish Added " + saved._id);
+    let msg;
+    if (wish) {
+      await Wishlist.findByIdAndRemove(wish._id);
+      msg = "Removed from the wishlist";
+    } else {
+      let newWish = new Wishlist(req.body);
+      await newWish.save();
+      msg = "Added to the Wishlist";
+    }
+
+    const wishes = await Wishlist.find({ userId: req.body.userId }).populate(
+      "productId"
+    );
+    res.status(200).json({ data: wishes, msg });
 
     return;
   } catch (error) {
@@ -19,7 +34,7 @@ exports.getWishProduct = async (req, res) => {
     const id = req.params.id;
     if (!id) return res.status(400).send("Invalid User Id");
 
-    const wishes = await Wishlist.find({ userId: id });
+    const wishes = await Wishlist.find({ userId: id }).populate("productId");
     if (wishes?.length === 0)
       return res.status(404).send("No wishlist for the user");
 

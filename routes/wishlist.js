@@ -2,11 +2,11 @@ const express = require("express");
 const router = express.Router();
 
 const {
-  addWishProduct,
   getWishProduct,
+  updateWishlist,
 } = require("../controllers/wishlist.js");
 
-router.post("/", addWishProduct);
+router.post("/", updateWishlist);
 
 router.get("/:id", getWishProduct);
 
