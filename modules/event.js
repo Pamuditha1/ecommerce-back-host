@@ -33,6 +33,10 @@ const Event = mongoose.model(
       ref: "User",
       default: null,
     },
+    isLoggedUser: {
+      type: Boolean,
+      required: true,
+    },
     isDiscounted: {
       type: Boolean,
       default: false,
