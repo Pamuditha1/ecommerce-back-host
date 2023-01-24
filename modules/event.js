@@ -34,7 +34,7 @@ const Event = mongoose.model(
       default: null,
     },
     userAgeGroup: {
-      type: Date,
+      type: String,
     },
     isLoggedUser: {
       type: Boolean,
