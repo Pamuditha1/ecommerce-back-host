@@ -9,6 +9,7 @@ exports.registerUser = async (req, res) => {
 
     let newUser = new User({
       username: req.body.username,
+      dob: req.body.dob,
       email: req.body.email,
       contactNo: req.body.contactNo,
       contactNo2: req.body.contactNo2,
