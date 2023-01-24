@@ -33,6 +33,9 @@ const Event = mongoose.model(
       ref: "User",
       default: null,
     },
+    userAgeGroup: {
+      type: Date,
+    },
     isLoggedUser: {
       type: Boolean,
       required: true,
