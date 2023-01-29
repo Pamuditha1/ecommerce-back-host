@@ -53,7 +53,6 @@ const Event = mongoose.model(
     },
     ip: {
       type: String,
-      required: true,
     },
     location: {
       type: String,
