@@ -142,7 +142,11 @@ exports.preprocessEvents = async (req, res) => {
       }
     }
 
-    res.status(200).send("Events Data Preprocessing Succeed ", processedCount);
+    res
+      .status(200)
+      .send(
+        `Events Data Preprocessing Succeed. Saved ${processedCount} Records`
+      );
 
     return;
   } catch (error) {
