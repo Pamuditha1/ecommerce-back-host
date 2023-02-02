@@ -13,11 +13,11 @@ const PreprocessedEvent = mongoose.model(
       ref: "User",
     },
     isLoggedUser: {
-      type: Number,
+      type: Boolean,
       required: true,
     },
     isDiscounted: {
-      type: Number,
+      type: Boolean,
       required: true,
     },
     userAgeGroup: {
@@ -29,24 +29,24 @@ const PreprocessedEvent = mongoose.model(
     },
 
     isHovered: {
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
     isViewed: {
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
     isAddedToWishlist: {
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
     isAddedToCart: {
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
     isPurchased: {
-      type: Number,
-      default: 0,
+      type: Boolean,
+      default: false,
     },
 
     hoveredDuration: {

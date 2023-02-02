@@ -39,8 +39,8 @@ exports.preprocessEvents = async (req, res) => {
       newEvent = {
         productId: event.productId,
         userId: event.userId,
-        isDiscounted: event.isDiscounted ? 1 : 0,
-        isLoggedUser: event.isLoggedUser ? 1 : 0,
+        isDiscounted: event.isDiscounted ? true : false,
+        isLoggedUser: event.isLoggedUser ? true : false,
         userAgeGroup: event.userAgeGroup,
         season: event.season,
       };
@@ -64,7 +64,7 @@ exports.preprocessEvents = async (req, res) => {
             // if (otherEvent._id !== event._id) {
             if (otherEvent.event === "HOVER") {
               hoveredDuration += otherEvent.duration;
-              newEvent.isHovered = 1;
+              newEvent.isHovered = true;
               newEvent.hoveredTimestamp = event.timestamp;
               newEvent.hoveredDate = event.date;
               newEvent.hoveredTime = event.time;
@@ -78,7 +78,7 @@ exports.preprocessEvents = async (req, res) => {
             }
             if (otherEvent.event === "VIEW") {
               viewedDuration += otherEvent.duration;
-              newEvent.isViewed = 1;
+              newEvent.isViewed = true;
               newEvent.viewedTimestamp = event.timestamp;
               newEvent.viewedDate = event.date;
               newEvent.viewedTime = event.time;
@@ -91,7 +91,7 @@ exports.preprocessEvents = async (req, res) => {
               newEvent.viewedLocation = event.location;
             }
             if (otherEvent.event === "WISHLIST") {
-              newEvent.isAddedToWishlist = 1;
+              newEvent.isAddedToWishlist = true;
               newEvent.addedToWishlistTimestamp = event.timestamp;
               newEvent.addedToWishlistDate = event.date;
               newEvent.addedToWishlistTime = event.time;
@@ -104,7 +104,7 @@ exports.preprocessEvents = async (req, res) => {
               newEvent.addedToWishlistLocation = event.location;
             }
             if (otherEvent.event === "CART") {
-              newEvent.isAddedToCart = 1;
+              newEvent.isAddedToCart = true;
               newEvent.addedToCartTimestamp = event.timestamp;
               newEvent.addedToCartDate = event.date;
               newEvent.addedToCartTime = event.time;
@@ -117,7 +117,7 @@ exports.preprocessEvents = async (req, res) => {
               newEvent.addedToCartLocation = event.location;
             }
             if (otherEvent.event === "PURCHASE") {
-              newEvent.isPurchased = 1;
+              newEvent.isPurchased = true;
               newEvent.purchasedTimestamp = event.timestamp;
               newEvent.purchasedDate = event.date;
               newEvent.purchasedTime = event.time;
@@ -154,6 +154,93 @@ exports.preprocessEvents = async (req, res) => {
     res.status(500).send(error);
   }
 };
+
+// exports.updateEvents = async (req, res) => {
+//   await PreprocessedEvent.updateMany({ isHovered: 0 }, { isHovered: 111111 });
+//   await PreprocessedEvent.updateMany({ isHovered: 1 }, { isHovered: 222222 });
+
+//   await PreprocessedEvent.updateMany({ isViewed: 0 }, { isViewed: 111111 });
+//   await PreprocessedEvent.updateMany({ isViewed: 1 }, { isViewed: 222222 });
+
+//   await PreprocessedEvent.updateMany(
+//     { isAddedToWishlist: 0 },
+//     { isAddedToWishlist: 111111 }
+//   );
+//   await PreprocessedEvent.updateMany(
+//     { isAddedToWishlist: 1 },
+//     { isAddedToWishlist: 222222 }
+//   );
+
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isAddedToCart: 0,
+//     },
+//     {
+//       isAddedToCart: 111111,
+//     }
+//   );
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isAddedToCart: 1,
+//     },
+//     {
+//       isAddedToCart: 222222,
+//     }
+//   );
+
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isPurchased: 0,
+//     },
+//     {
+//       isPurchased: 111111,
+//     }
+//   );
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isPurchased: 1,
+//     },
+//     {
+//       isPurchased: 222222,
+//     }
+//   );
+
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isDiscounted: 0,
+//     },
+//     {
+//       isDiscounted: 111111,
+//     }
+//   );
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isDiscounted: 1,
+//     },
+//     {
+//       isDiscounted: 222222,
+//     }
+//   );
+
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isLoggedUser: 0,
+//     },
+//     {
+//       isLoggedUser: 111111,
+//     }
+//   );
+//   await PreprocessedEvent.updateMany(
+//     {
+//       isLoggedUser: 1,
+//     },
+//     {
+//       isLoggedUser: 222222,
+//     }
+//   );
+
+//   res.status(200).json({ msg: "Success" });
+// };
 
 // newEvent = {
 //   productId: event.productId,
