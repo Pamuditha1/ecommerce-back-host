@@ -43,5 +43,9 @@ app.use("/api/order", sales);
 app.use("/api/event", event);
 app.use("/api/wishlist", wishlist);
 
+app.get("/api", (req, res) => {
+  res.send("API is running")
+})
+
 const port = process.env.PORT || 3002;
 app.listen(port, () => console.log(`Listening on port ${port} ...`));

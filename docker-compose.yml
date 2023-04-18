@@ -16,6 +16,10 @@ services:
     env_file: ./.env
     environment:
       - NODE_ENV=development
+      - MONGODB_URI=mongodb+srv://admin:12345@cluster0.lquut.mongodb.net/mensCollection?retryWrites=true&w=majority
+      - JWT=jwtlock
+      - MAIL_API=1ae3687b2198f7ab6c29f02f69792c95-e31dc3cc-9c590f08
+      - MAIL_DOMAIN=sandbox14ab5bcfff3b4cdfbfb032690942c580.mailgun.org
 
 volumes:
   web-root:
